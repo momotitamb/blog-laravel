@@ -101,7 +101,11 @@ h1 {
 
 /* Формы */
 input, textarea, select {
+    display: block; 
+    width: 100%;
+    max-width: 500px;
     padding: 7px;
+    margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 3px;
     font-size: 16px;

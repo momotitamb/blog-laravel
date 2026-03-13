@@ -10,19 +10,12 @@ use App\Models\User;
 class UserController extends Controller
 {
     public function index() {
-        return view ('hello', [
-            'name' => 'Иван',
-            'age' => 25
-        ]);
-    }
-
-    public function users() {
         $users = User::all();
         return view('users', ['users' => $users]);
     }
 
-    public function showOneUser(User $user) {
-        return view('user-detail', ['user' => $user]);
+    public function show(User $user) {
+        return view('user-show', ['user' => $user]);
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 
     public function create() {

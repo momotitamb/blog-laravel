@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
     <title>Редактировать пользователя</title>
 </head>
 <body>
@@ -10,15 +11,15 @@
     <form method="POST" action="/users/{{ $user->id }}">
         @csrf
         @method('PUT')
-        <h3>
-            <label>Имя:</label>
-            <input type="text" name="name" value="{{ $user->name }}" required>
-        </h3>
-        <h3>
-            <label>Email:</label>
-            <input type="email" name="email" value="{{ $user->email }}" required>
-        </h3>
-        <button type="submit">Сохранить</button>
+        
+        <label>Имя:</label>
+        <input type="text" name="name" value="{{ $user->name }}" required>    
+    
+        <label>Email:</label>
+        <input type="email" name="email" value="{{ $user->email }}" required>
+    
+        <button type="submit" class="btn btn-success">Сохранить</button>
+        <a href="/users#user-{{ $user->id }}" class="btn btn-primary">Отмена</a>
     </form>
 </body>
 </html>
