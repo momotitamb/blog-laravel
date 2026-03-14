@@ -23,7 +23,10 @@
         
         <label>Заголовок:</label>
         <input type="text" name="title" value="{{ old('title', $post->title) }}" required>
-            
+
+        <label>Краткое описание:</label>
+        <textarea name="excerpt" id="excerpt">{{ old('excerpt', $post->excerpt) }}</textarea>  
+
         <label>Содержание:</label>
         <textarea name="content" required>{{ old('content', $post->content) }}</textarea>
             

@@ -26,10 +26,11 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|min:3|max:255',
             'content' => 'required|min:10',
-            'user_id' => 'required|exists:users,id' // user_id должен существовать в таблице users
+            'user_id' => 'required|exists:users,id', // user_id должен существовать в таблице users
+            'excerpt' => 'max:300'
         ]);
 
-        Post::create($request->only(['title', 'content', 'user_id']));
+        Post::create($request->only(['title', 'content', 'user_id', 'excerpt']));
         return redirect('/posts')->with('success', 'Пост успешно создан!');
     }
 
@@ -42,10 +43,11 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|min:3|max:255',
             'content' => 'required|min:10',
-            'user_id' => 'required|exists:users,id' // user_id должен существовать в таблице users
+            'user_id' => 'required|exists:users,id', // user_id должен существовать в таблице users
+            'excerpt' => 'max:300'
         ]);
         
-        $post->update($request->only(['title', 'content', 'user_id']));
+        $post->update($request->only(['title', 'content', 'user_id', 'excerpt']));
         return redirect('/posts')->with('success', 'Пост успешно обновлен!');
     }
 

@@ -22,6 +22,9 @@
         <label>Заголовок:</label>
         <input type="text" name="title" value="{{ old('title') }}" required>    
     
+        <label>Краткое описание:</label>
+        <textarea name="excerpt" id="excerpt">{{ old('excerpt') }}</textarea>
+
         <label>Содержание:</label>
         <textarea name="content" id="content" required>{{ old('content') }}</textarea>    
     

@@ -22,6 +22,9 @@
     @foreach ($posts as $post)
         <div class="post-card">
             <strong>Заголовок: {{ $post->title }}</strong><br>
+            @if ($post->excerpt)
+                {{ $post->excerpt }}
+            @endif
             Содержание: {{ $post->content }}<br><br>
             <small>Автор: {{ $post->user->name }}</small><br>
             <a href="/posts/{{ $post->id }}" class="btn btn-primary">Просмотр</a>
