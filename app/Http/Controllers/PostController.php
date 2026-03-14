@@ -6,14 +6,20 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
 
+
 class PostController extends Controller
 {
-    public function index() {
-        $posts = Post::latest()->get();
+    public function index(Request $request) {
+        $search = $request->input('search');
+        if ($search) {
+            $posts = Post::where('title', 'like', '%' . $search . '%')->latest()->get();
+        } else {
+            $posts = Post::latest()->get();
+        }
         return view('posts', ['posts' => $posts]);
     }
 
-    public function show(Post $post) {
+    public function show(Post $post) {        
         return view('post-show', ['post' => $post]);
     }
 

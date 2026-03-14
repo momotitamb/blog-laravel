@@ -11,11 +11,11 @@
     @foreach ($posts as $post)
     <div class="post-card">
         <h3>{{ $post->title }}</h3>
-        <h4>{{ $post->content }}</h4>
+        <p>{{ $post->content }}</p>
         <small>Создан: {{ $post->created_at }}</small><br>
     </div>
     @endforeach
     <a href="/users#user-{{ $user->id }}" class="btn btn-primary">Назад к пользователям</a>
-    <a href="/posts#post-{{ $post->id }}" class="btn btn-primary">Назад к постам</a><br><br>
+    <a href="/posts" class="btn btn-primary">Назад к постам</a>
 </body>
 </html>

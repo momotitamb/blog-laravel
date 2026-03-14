@@ -17,11 +17,18 @@
             {{ session('error') }}
         </div>
     @endif
+    <form method="GET" action="/posts">
+        <input type="text" name="search" value="{{ request('search') }}">
+        <button type="submit" class="btn btn-primary">Найти</button>
+        @if (request('search'))
+            <a href="/posts" class="btn btn-danger">Сбросить</a>
+        @endif
+    </form>
     <h1>Все посты:</h1>
     <div style="margin-bottom: 20px;">
         <a href="/posts/create" class="btn btn-success">Создать пост</a>
     </div>
-    @foreach ($posts as $post)
+    @forelse ($posts as $post)
         <div class="post-card" id="post-{{ $post->id }}">
             <strong>{{ $post->title }}</strong><br><br>
             @if ($post->excerpt)
@@ -36,6 +43,12 @@
                 <button type="submit" class="btn btn-danger">Удалить</button>
             </form>
         </div>
-    @endforeach
+    @empty
+        @if (request('search'))
+            <p>По запросу "{{ request('search') }}" ничего не найдено</p>
+        @else
+            <p>Постов пока нет</p>
+        @endif
+    @endforelse
 </body>
 </html>

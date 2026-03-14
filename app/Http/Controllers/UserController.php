@@ -9,8 +9,13 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function index() {
-        $users = User::orderBy('name', 'asc')->get();
+    public function index(Request $request) {
+        $search = $request->input('search');
+        if ($search) {
+            $users = User::where('name', 'like', '%' . $search . '%')->orderBy('name')->get();
+        } else {
+            $users = User::orderBy('name', 'asc')->get();
+        }
         return view('users', ['users' => $users]);
     }
 
