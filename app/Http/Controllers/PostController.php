@@ -10,13 +10,21 @@ use App\Models\User;
 class PostController extends Controller
 {
     public function index(Request $request) {
-        $search = $request->input('search');
+        $search = $request->input('search'); // читаем поисковый запрос из URL (?search=...)
+        $userId = $request->input('user_id'); // читаем выбранного автора из URL (?user_id=2)
+        $query = Post::latest(); // начинаем строить запрос
+
         if ($search) {
-            $posts = Post::where('title', 'like', '%' . $search . '%')->latest()->get();
-        } else {
-            $posts = Post::latest()->get();
+            $query->where('title', 'like', '%' . $search . '%');
         }
-        return view('posts', ['posts' => $posts]);
+
+        if ($userId) { // добавляем фильтр по автору только если он выбран
+            $query->where('user_id', $userId);
+        }
+
+        $users = User::orderBy('name')->get();
+        $posts = $query->get();
+        return view('posts', ['posts' => $posts, 'users' => $users]);
     }
 
     public function show(Post $post) {        
