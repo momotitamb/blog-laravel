@@ -7,11 +7,17 @@
     <title>Пользователи</title>
 </head>
 <body>
+    <nav class="nav">
+        <a href="/posts" class="{{ request()->is('posts*') ? 'nav-active' : '' }}">Посты</a>
+        <a href="/users" class="{{ request()->is('users*') ? 'nav-active' : '' }}">Пользователи</a>
+    </nav>
+
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
+
     <form method="GET" action="/users">
         <input type="text" name="search" value="{{ request('search') }}">
         <button type="submit" class="btn btn-primary">Найти</button>
@@ -19,11 +25,15 @@
             <a href="/users" class="btn btn-danger">Сбросить</a>
         @endif
     </form>
+
     <h1>Все пользователи</h1>
+
     <div style="margin-bottom: 20px;">
         <a href="/users/create" class="btn btn-success">Создать пользователя</a>
     </div>
+
     @forelse ($users as $user)
+    
         <div class="post-card" id="user-{{ $user->id }}">
             <strong>{{ $user->name }}</strong><br><br>
             {{ $user->email }}<br><br>

@@ -7,6 +7,11 @@
     <title>Посты</title>
 </head>
 <body>
+    <nav class="nav">
+        <a href="/posts" class="{{ request()->is('posts*') ? 'nav-active' : '' }}">Посты</a>
+        <a href="/users" class="{{ request()->is('users*') ? 'nav-active' : '' }}">Пользователи</a>
+    </nav>
+
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -42,6 +47,23 @@
     <div style="margin-bottom: 20px;">
         <a href="/posts/create" class="btn btn-success">Создать пост</a>
     </div>
+
+    @if (request('search') || request('user_id'))
+        @php
+            $count = $posts->count();
+            if ($count % 100 >= 11 && $count % 100 <= 19) {
+                $word = 'постов';
+            } elseif ($count % 10 == 1) {
+                $word = 'пост';
+            } elseif ($count % 10 >= 2 && $count % 10 <= 4) {
+                $word = 'поста';
+            } else {
+                $word = 'постов';
+            }
+        @endphp
+        
+        Найдено: {{ $count }} {{ $word }}
+    @endif
 
     {{-- forelse — как foreach, но с блоком @empty если коллекция пустая --}}
     @forelse ($posts as $post)
