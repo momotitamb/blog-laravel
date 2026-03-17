@@ -1,6 +1,7 @@
 @php
     /** @var \App\Models\Post $post */
     // Это PHPDoc комментарий. @var говорит редактору — "переменная $post это объект класса App\Models\Post". Редактор видит это и знает какие свойства и методы доступны у $post, поэтому перестаёт предупреждать.
+    /** @var \Illuminate\Database\Eloquent\Collection $posts */
 @endphp
 
 <!DOCTYPE html>
