@@ -10,8 +10,18 @@ Route::get('/', function () {
 });
 
 
+// С middleware — изменение данных возможно только для админа
+Route::middleware('check.admin')->group(function() {
+    Route::resource('posts', PostController::class)->only
+    (['create', 'store', 'edit', 'update', 'destroy']);
+});
 
-Route::resource('posts', PostController::class);
+// Без middleware — просмотр доступен всем
+
+Route::resource('posts', PostController::class)->only(['index', 'show']);
+
+// Route::resource('posts', PostController::class)->middleware(['check.admin' =>
+//     ['create', 'store', 'edit', 'update', 'destroy']]); 2 способ
 
 Route::resource('categories', CategoryController::class);
 

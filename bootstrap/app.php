@@ -11,7 +11,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias(['check.admin' => \App\Http\Middleware\CheckAdmin::class]); // регистрирует псевдоним чтобы не писать полный путь к классу
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

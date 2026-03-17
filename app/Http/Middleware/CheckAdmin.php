@@ -15,6 +15,10 @@ class CheckAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        if ($request->query('admin') !== '1') {
+            return response('Доступ запрещен', 403);
+        } else {
+            return $next($request);
+        }
     }
 }
