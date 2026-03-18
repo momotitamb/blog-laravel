@@ -1,3 +1,7 @@
+@php
+    /** @var \App\Models\Post $post */
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +20,15 @@
         
         {{ $post->content }}<br><br>
         <small>Автор: {{ $post->user->name }}</small><br>
+
+        @if ($post->tags->isNotEmpty())
+            <div class="tags-list">
+                @foreach ($post->tags as $tag)
+                    <span class="tag">{{ $tag->name }}</span>
+                @endforeach            
+            </div>
+        @endif
+        <br>
         <a href="/posts#post-{{ $post->id }}" class="btn btn-primary">Назад к постам</a>
         <a href="/users/{{ $post->user->id }}/posts" class="btn btn-primary">Все посты автора</a>
     </div>

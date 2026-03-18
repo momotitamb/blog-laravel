@@ -161,8 +161,59 @@ input[type="checkbox"] {
     margin-bottom: 0;
 }
 
+/* repeat(4, 1fr) — 4 колонки одинаковой ширины. Чекбоксы сами разложатся по сетке. */
 .tags-block {
     margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 }
+
+/* Вынесл "Теги" из блока, grid-column: 1 / -1 означает "от первой до последней колонки" */
+.tags-block > label:first-child {
+    grid-column: 1 / -1;
+}
+
+.tags-list {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tag {
+    background: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #90caf9;
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-size: 13px;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    gap: 5px;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.pagination .page-link {
+    display: inline-block;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    color: #1976d2;
+    text-decoration: none;
+}
+
+.pagination .page-item.active .page-link {
+    background: #e3f2fd;
+    border-color: #90caf9;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #aaa;
+}
+
 
 

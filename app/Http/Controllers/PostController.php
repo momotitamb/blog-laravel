@@ -15,6 +15,7 @@ class PostController extends Controller
         $search = $request->input('search'); // читаем ?search=... из URL, кладём в переменную
         $userId = $request->input('user_id'); // читаем выбранного автора из URL (?user_id=2)
         $categoryId = $request->input('category_id'); // читаем ?category_id=... из URL
+        $tagId = $request->input('tag_id');
 
         $sort = $request->input('sort', 'created_at'); // читаем ?sort=... из URL, если нет — по умолчанию 'created_at'
 
@@ -37,12 +38,19 @@ class PostController extends Controller
 
         if ($categoryId) { 
             $query->where('category_id', $categoryId); // добавляем WHERE category_id = ?
+        }
+
+        if ($tagId) { 
+            $query->whereHas('tags', function($q) use ($tagId) {
+                $q->where('tags.id', $tagId);
+            });
         }    
             
+        $tags = Tag::all();
         $categories = Category::all();
         $users = User::orderBy('name')->get();
-        $posts = $query->get();
-        return view('posts', ['posts' => $posts, 'users' => $users, 'categories' => $categories]);
+        $posts = $query->paginate(5)->withQueryString();
+        return view('posts', ['posts' => $posts, 'users' => $users, 'categories' => $categories, 'tags' => $tags]);
     }
 
     public function show(Post $post) {        
@@ -89,7 +97,7 @@ class PostController extends Controller
         
         $post->update($request->only(['title', 'content', 'user_id', 'excerpt', 'category_id']));
         $post->tags()->sync($request->input('tags', []));
-        return redirect('/posts')->with('success', 'Пост успешно обновлен!');
+        return redirect('/posts/' . $post->id)->with('success', 'Пост успешно обновлен!');
     }
 
     public function destroy(Post $post) {

@@ -51,6 +51,15 @@
             @endforeach
         </select>
 
+        <select name="tag_id">
+            <option value="">Все теги</option>
+            @foreach ($tags as $tag)    
+                <option value="{{ $tag->id }}" {{ request('tag_id') == $tag->id ? 'selected' : '' }}>
+                    {{ $tag->name }}
+                </option>
+            @endforeach
+        </select>
+
         <select name="sort">
             <option value="created_at" {{ request('sort') == 'created_at' ? 'selected' : '' }}>По дате</option>
             <option value="title" {{ request('sort') == 'title' ? 'selected' : '' }}>По заголовку</option>
@@ -91,20 +100,28 @@
 
     {{-- forelse — как foreach, но с блоком @empty если коллекция пустая --}}
     @forelse ($posts as $post)
-        <div class="post-card" id="post-{{ $post->id }}">
+        <div class="post-card" id="post-{{ $post->id }}">            
 
-            {{-- Показываем category только если она есть --}}
             @if ($post->category)
                 <small>{{ $post->category->name }}</small><br>            
             @endif
-            <strong>{{ $post->title }}</strong><br><br>
 
-            {{-- Показываем excerpt только если он есть --}}
+            <strong>{{ $post->title }}</strong><br><br>
+            
             @if ($post->excerpt)
                 {{ $post->excerpt }}<br><br>
             @endif
 
             <small>Автор: {{ $post->user->name }}</small><br>
+
+            @if ($post->tags->isNotEmpty())
+                <div class="tags-list">
+                    @foreach ($post->tags as $tag)
+                        <span class="tag">{{ $tag->name }}</span>
+                    @endforeach            
+                </div>
+            @endif
+            <br>
             <a href="/posts/{{ $post->id }}" class="btn btn-primary">Просмотр</a>
             <a href="/posts/{{ $post->id }}/edit" class="btn btn-warning">Редактировать</a>
 
@@ -114,7 +131,7 @@
                 <button type="submit" class="btn btn-danger">Удалить</button>
             </form>
         </div>
-    {{-- Срабатывает когда $posts пустой --}}
+    
     @empty
         @if (request('search') || request('user_id') || request('category_id') || request('sort'))
             <p>По запросу ничего не найдено</p>
@@ -122,5 +139,6 @@
             <p>Постов пока нет</p>
         @endif
     @endforelse
+    {{ $posts->links() }}
 </body>
 </html>
