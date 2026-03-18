@@ -35,7 +35,17 @@
         
         <label>Заголовок:</label>
         <input type="text" name="title" value="{{ old('title') }}" required>    
-    
+
+        <div class="tags-block">
+            <label>Теги:</label>
+            @foreach ($tags as $tag)
+                <label>
+                    <input type="checkbox" name="tags[]" value="{{ $tag->id }}">
+                    {{ $tag->name }} <br>
+                </label>
+            @endforeach
+        </div>
+
         <label>Краткое описание:</label>
         <textarea name="excerpt" id="excerpt">{{ old('excerpt') }}</textarea>
 

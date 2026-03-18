@@ -42,9 +42,19 @@
         <label>Заголовок:</label>
         <input type="text" name="title" value="{{ old('title', $post->title) }}" required>
 
-        <label>Краткое описание:</label>
+        <div style="margin-bottom: 15px;">
+            <label>Тег</label>
+            @foreach ($tags as $tag)
+                <label>
+                    <input type="checkbox" name="tags[]" value="{{ $tag->id }}" {{ $post->tags->contains($tag->id) ? 'checked' : '' }}>
+                    {{ $tag->name }}
+                </label>
+            @endforeach
+        </div>
+    
+        <label class="section-label" style="margin-top: 25px !important; display: block !important;">Краткое описание:</label>
         <textarea name="excerpt" id="excerpt">{{ old('excerpt', $post->excerpt) }}</textarea> 
-
+        
         <label>Содержание:</label>
         <textarea name="content" required>{{ old('content', $post->content) }}</textarea>
             

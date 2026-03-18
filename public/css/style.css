@@ -143,3 +143,26 @@ label {
 .nav-active { 
     font-weight: bold; border-bottom: 2px solid #1976d2; 
 }
+
+/* label:has(input[type="checkbox"]) — выбирает только те label которые содержат чекбокс 
+и делает их блочными. Обычные label (для полей формы) останутся как есть. */
+
+label:has(input[type="checkbox"]) {
+    display: block;
+}
+
+
+/* display: block применяется ко всем input включая чекбоксы. Из-за этого каждый чекбокс 
+занимает всю строку и "Краткое описание" прилипает к последнему чекбоксу без отступа. */
+
+input[type="checkbox"] {
+    display: inline;
+    width: auto;
+    margin-bottom: 0;
+}
+
+.tags-block {
+    margin-bottom: 20px;
+}
+
+

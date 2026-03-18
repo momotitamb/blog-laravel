@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TagController;
 
 
 Route::get('/', function () {
@@ -32,6 +33,8 @@ Route::resource('posts', PostController::class)->only(['index', 'show']);
 //     ['create', 'store', 'edit', 'update', 'destroy']]); 2 способ
 
 Route::resource('categories', CategoryController::class);
+
+Route::resource('tags', TagController::class);
 
 Route::get('/users/{user}/latest-posts', [UserController::class, 'userLatestPosts']);
 

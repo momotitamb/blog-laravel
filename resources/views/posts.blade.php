@@ -17,6 +17,7 @@
         <a href="/posts" class="{{ request()->is('posts*') ? 'nav-active' : '' }}">Посты</a>
         <a href="/users" class="{{ request()->is('users*') ? 'nav-active' : '' }}">Пользователи</a>
         <a href="/categories" class="{{ request()->is('categories*') ? 'nav-active' : '' }}">Категории</a>
+        <a href="/tags" class="{{ request()->is('tags*') ? 'nav-active' : '' }}">Теги</a>
     </nav>
 
     @if (session('success'))

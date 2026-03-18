@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Tag;
 
 
 class PostController extends Controller
@@ -26,7 +27,6 @@ class PostController extends Controller
             $query = Post::orderBy($sort, $order);
         }
 
-
         if ($search) {
             $query->where('title', 'like', '%' . $search . '%'); // добавляем условие к запросу
         }
@@ -37,10 +37,7 @@ class PostController extends Controller
 
         if ($categoryId) { 
             $query->where('category_id', $categoryId); // добавляем WHERE category_id = ?
-        }
-
-        
-            
+        }    
             
         $categories = Category::all();
         $users = User::orderBy('name')->get();
@@ -55,7 +52,8 @@ class PostController extends Controller
     public function create() {
         $users = User::all();
         $categories = Category::all();
-        return view('post-create', ['users' => $users, 'categories' => $categories]);
+        $tags = Tag::all();
+        return view('post-create', ['users' => $users, 'categories' => $categories, 'tags' => $tags]);
     }
 
     public function store(Request $request) {
@@ -67,14 +65,17 @@ class PostController extends Controller
             'category_id' => 'nullable|exists:categories,id'
         ]);
 
-        Post::create($request->only(['title', 'content', 'user_id', 'excerpt', 'category_id']));
+        $post = Post::create($request->only(['title', 'content', 'user_id', 'excerpt', 'category_id']));
+        $post->tags()->sync($request->input('tags', []));
         return redirect('/posts')->with('success', 'Пост успешно создан!');
+        // $request->input('tags', []) — читает массив выбранных тегов из формы, если ничего не выбрано — пустой массив. sync берёт этот массив id и записывает связи в таблицу post_tag
     }
 
     public function edit(Post $post) {        
         $users = User::all();
         $categories = Category::all();
-        return view('post-edit', ['post' => $post, 'users' => $users, 'categories' => $categories]);
+        $tags = Tag::all();
+        return view('post-edit', ['post' => $post, 'users' => $users, 'categories' => $categories, 'tags' => $tags]);
     }
 
     public function update(Request $request, Post $post) {
@@ -87,6 +88,7 @@ class PostController extends Controller
         ]);
         
         $post->update($request->only(['title', 'content', 'user_id', 'excerpt', 'category_id']));
+        $post->tags()->sync($request->input('tags', []));
         return redirect('/posts')->with('success', 'Пост успешно обновлен!');
     }
 
