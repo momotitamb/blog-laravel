@@ -1,28 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css">
-    <title>Категории</title>
-</head>
-<body>
-    <nav class="nav">
-        <a href="/posts" class="{{ request()->is('posts*') ? 'nav-active' : '' }}">Посты</a>
-        <a href="/users" class="{{ request()->is('users*') ? 'nav-active' : '' }}">Пользователи</a>
-        <a href="/categories" class="{{ request()->is('categories*') ? 'nav-active' : '' }}">Категории</a>
-    </nav>
-
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-error">
-            {{ session('error') }}
-        </div>
-    @endif
+@extends('layouts.main')
+    
+@section('content')  
 
     <h1>Все категории</h1>
 
@@ -31,7 +9,7 @@
     </div>
 
     @forelse ($categories as $category)
-        <div class="post-card" id="{{ $category->id }}">
+        <div class="post-card" id="category-{{ $category->id }}">
             <strong>{{ $category->name }}</strong><br><br>
 
             {{-- Показываем description только если он есть --}}
@@ -52,5 +30,5 @@
     @empty
         <p>Категорий пока нет</p>
     @endforelse
-</body>
-</html>
+
+@endsection

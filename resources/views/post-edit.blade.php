@@ -2,15 +2,10 @@
     /** @var \App\Models\Post $post */
 @endphp
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css">
-    <title>Редактировать пост</title>
-</head>
-<body>
+@extends('layouts.main')
+    
+@section('content')  
+
     @if ($errors->any())
         <div class="alert alert-error">
             <ul>
@@ -42,8 +37,8 @@
         <label>Заголовок:</label>
         <input type="text" name="title" value="{{ old('title', $post->title) }}" required>
 
-        <div style="margin-bottom: 15px;">
-            <label>Тег</label>
+        <div class="tags-block">
+            <label>Теги:</label>
             @foreach ($tags as $tag)
                 <label>
                     <input type="checkbox" name="tags[]" value="{{ $tag->id }}" {{ $post->tags->contains($tag->id) ? 'checked' : '' }}>
@@ -67,8 +62,7 @@
             @endforeach
         </select>
         
-        <a href="/posts#post-{{ $post->id }}" class="btn btn-primary">Отмена</a>
+        <a href="/posts" class="btn btn-primary">Отмена</a>
         <button type="submit" class="btn btn-success">Сохранить</button><br>
     </form>
-</body>
-</html>
+@endsection

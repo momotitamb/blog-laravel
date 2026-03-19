@@ -4,141 +4,118 @@
     /** @var \Illuminate\Database\Eloquent\Collection $posts */
 @endphp
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css">
-    <title>Посты</title>
-</head>
-<body>
-    <nav class="nav">
-        <a href="/posts" class="{{ request()->is('posts*') ? 'nav-active' : '' }}">Посты</a>
-        <a href="/users" class="{{ request()->is('users*') ? 'nav-active' : '' }}">Пользователи</a>
-        <a href="/categories" class="{{ request()->is('categories*') ? 'nav-active' : '' }}">Категории</a>
-        <a href="/tags" class="{{ request()->is('tags*') ? 'nav-active' : '' }}">Теги</a>
-    </nav>
-
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-error">
-            {{ session('error') }}
-        </div>
-    @endif
+@extends('layouts.main')
     
-    <form method="GET" action="/posts">
-        <input type="text" name="search" value="{{ request('search') }}">
-        <select name="user_id">
-            <option value="">Все авторы</option>
-            @foreach ($users as $user)
-                <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : ''}}>
-                    {{ $user->name }}
-                </option>
-            @endforeach
-        </select>
+@section('content')    
+    
+<form method="GET" action="/posts">
+    <input type="text" name="search" value="{{ request('search') }}">
+    <select name="user_id">
+        <option value="">Все авторы</option>
+        @foreach ($users as $user)
+            <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : ''}}>
+                {{ $user->name }}
+            </option>
+        @endforeach
+    </select>
 
-        <select name="category_id">
-            <option value="">Все категории</option>
-            @foreach ($categories as $category)
-                <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : ''}}>
-                    {{ $category->name }}
-                </option>
-            @endforeach
-        </select>
+    <select name="category_id">
+        <option value="">Все категории</option>
+        @foreach ($categories as $category)
+            <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : ''}}>
+                {{ $category->name }}
+            </option>
+        @endforeach
+    </select>
 
-        <select name="tag_id">
-            <option value="">Все теги</option>
-            @foreach ($tags as $tag)    
-                <option value="{{ $tag->id }}" {{ request('tag_id') == $tag->id ? 'selected' : '' }}>
-                    {{ $tag->name }}
-                </option>
-            @endforeach
-        </select>
+    <select name="tag_id">
+        <option value="">Все теги</option>
+        @foreach ($tags as $tag)    
+            <option value="{{ $tag->id }}" {{ request('tag_id') == $tag->id ? 'selected' : '' }}>
+                {{ $tag->name }}
+            </option>
+        @endforeach
+    </select>
 
-        <select name="sort">
-            <option value="created_at" {{ request('sort') == 'created_at' ? 'selected' : '' }}>По дате</option>
-            <option value="title" {{ request('sort') == 'title' ? 'selected' : '' }}>По заголовку</option>
-            <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>По категории</option>
-        </select>
+    <select name="sort">
+        <option value="created_at" {{ request('sort') == 'created_at' ? 'selected' : '' }}>По дате</option>
+        <option value="title" {{ request('sort') == 'title' ? 'selected' : '' }}>По заголовку</option>
+        <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>По категории</option>
+    </select>
 
-        <button type="submit" class="btn btn-primary">Найти</button>
+    <button type="submit" class="btn btn-primary">Найти</button>
 
-        {{-- Кнопка сброса — показывается только если активен поиск ИЛИ выбран автор --}}
-        @if (request('search') || (request('user_id')) || (request('category_id')) || (request('sort')))
-            <a href="/posts" class="btn btn-danger">Сбросить</a>
+    {{-- Кнопка сброса — показывается только если активен поиск ИЛИ выбран автор --}}
+    @if (request('search') || (request('user_id')) || (request('category_id')) || (request('sort')))
+        <a href="/posts" class="btn btn-danger">Сбросить</a>
+    @endif
+
+</form>
+
+<h1>Все посты</h1>
+
+<div style="margin-bottom: 20px;">
+    <a href="/posts/create" class="btn btn-success">Создать пост</a>
+</div>
+
+@if (request('search') || request('user_id') || request('category_id') || request('sort'))
+    @php
+        $count = $posts->count();
+        if ($count % 100 >= 11 && $count % 100 <= 19) {
+            $word = 'постов';
+        } elseif ($count % 10 == 1) {
+            $word = 'пост';
+        } elseif ($count % 10 >= 2 && $count % 10 <= 4) {
+            $word = 'поста';
+        } else {
+            $word = 'постов';
+        }
+    @endphp
+    
+    Найдено: {{ $count }} {{ $word }}
+@endif
+
+{{-- forelse — как foreach, но с блоком @empty если коллекция пустая --}}
+@forelse ($posts as $post)
+    <div class="post-card" id="post-{{ $post->id }}">            
+
+        @if ($post->category)
+            <small>{{ $post->category->name }}</small><br>            
         @endif
 
-    </form>
+        <strong>{{ $post->title }}</strong><br><br>
+        
+        @if ($post->excerpt)
+            {{ $post->excerpt }}<br><br>
+        @endif
 
-    <h1>Все посты</h1>
+        <small>Автор: {{ $post->user->name }}</small><br>
 
-    <div style="margin-bottom: 20px;">
-        <a href="/posts/create" class="btn btn-success">Создать пост</a>
+        @if ($post->tags->isNotEmpty())
+            <div class="tags-list">
+                @foreach ($post->tags as $tag)
+                    <span class="tag">{{ $tag->name }}</span>
+                @endforeach            
+            </div>
+        @endif
+        <br>
+        <a href="/posts/{{ $post->id }}" class="btn btn-primary">Просмотр</a>
+        <a href="/posts/{{ $post->id }}/edit" class="btn btn-warning">Редактировать</a>
+
+        <form method="POST" action="/posts/{{ $post->id }}" style="display: inline;" onsubmit="return confirm('Вы уверены?')">
+            @csrf
+            @method ("DELETE")
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
     </div>
 
+@empty
     @if (request('search') || request('user_id') || request('category_id') || request('sort'))
-        @php
-            $count = $posts->count();
-            if ($count % 100 >= 11 && $count % 100 <= 19) {
-                $word = 'постов';
-            } elseif ($count % 10 == 1) {
-                $word = 'пост';
-            } elseif ($count % 10 >= 2 && $count % 10 <= 4) {
-                $word = 'поста';
-            } else {
-                $word = 'постов';
-            }
-        @endphp
-        
-        Найдено: {{ $count }} {{ $word }}
+        <p>По запросу ничего не найдено</p>
+    @else
+        <p>Постов пока нет</p>
     @endif
+@endforelse
+{{ $posts->links() }}
 
-    {{-- forelse — как foreach, но с блоком @empty если коллекция пустая --}}
-    @forelse ($posts as $post)
-        <div class="post-card" id="post-{{ $post->id }}">            
-
-            @if ($post->category)
-                <small>{{ $post->category->name }}</small><br>            
-            @endif
-
-            <strong>{{ $post->title }}</strong><br><br>
-            
-            @if ($post->excerpt)
-                {{ $post->excerpt }}<br><br>
-            @endif
-
-            <small>Автор: {{ $post->user->name }}</small><br>
-
-            @if ($post->tags->isNotEmpty())
-                <div class="tags-list">
-                    @foreach ($post->tags as $tag)
-                        <span class="tag">{{ $tag->name }}</span>
-                    @endforeach            
-                </div>
-            @endif
-            <br>
-            <a href="/posts/{{ $post->id }}" class="btn btn-primary">Просмотр</a>
-            <a href="/posts/{{ $post->id }}/edit" class="btn btn-warning">Редактировать</a>
-
-            <form method="POST" action="/posts/{{ $post->id }}" style="display: inline;" onsubmit="return confirm('Вы уверены?')">
-                @csrf
-                @method ("DELETE")
-                <button type="submit" class="btn btn-danger">Удалить</button>
-            </form>
-        </div>
-    
-    @empty
-        @if (request('search') || request('user_id') || request('category_id') || request('sort'))
-            <p>По запросу ничего не найдено</p>
-        @else
-            <p>Постов пока нет</p>
-        @endif
-    @endforelse
-    {{ $posts->links() }}
-</body>
-</html>
+@endsection

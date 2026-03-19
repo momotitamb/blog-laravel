@@ -2,15 +2,10 @@
     /** @var \App\Models\Post $post */
 @endphp
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css">
-    <title>Пост</title>
-</head>
-<body>       
+@extends('layouts.main')
+    
+@section('content')      
+  
     <div class="post-card">
         <strong>{{ $post->title }}</strong><br><br>
 
@@ -29,8 +24,8 @@
             </div>
         @endif
         <br>
-        <a href="/posts#post-{{ $post->id }}" class="btn btn-primary">Назад к постам</a>
+        <a href="/posts" class="btn btn-primary">Назад к постам</a>
         <a href="/users/{{ $post->user->id }}/posts" class="btn btn-primary">Все посты автора</a>
     </div>
-</body>
-</html>
+
+@endsection
