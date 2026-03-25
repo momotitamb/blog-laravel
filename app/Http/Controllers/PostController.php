@@ -10,6 +10,7 @@ use App\Models\Tag;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\VacancyResource;
 use App\Services\PostService;
+use App\Jobs\LogPostCreated;
 
 class PostController extends Controller
 {
@@ -75,8 +76,10 @@ class PostController extends Controller
             'category_id' => 'nullable|exists:categories,id'
         ]);
 
+        
         $post = Post::create($request->only(['title', 'content', 'user_id', 'excerpt', 'category_id']));
         $post->tags()->sync($request->input('tags', []));
+        LogPostCreated::dispatch($post);
         return redirect('/posts')->with('success', 'Пост успешно создан!');
         // $request->input('tags', []) — читает массив выбранных тегов из формы, если ничего не выбрано — пустой массив. sync берёт этот массив id и записывает связи в таблицу post_tag
     }
