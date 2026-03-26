@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryController extends Controller
 {
@@ -27,6 +28,7 @@ class CategoryController extends Controller
         ]);
 
         Category::create($request->only(['name', 'description']));
+        Cache::forget('categories'); // сбрасываем после записи в БД        
         return redirect('/categories')->with('success', 'Категория успешно создана!');
     }
 
@@ -41,11 +43,13 @@ class CategoryController extends Controller
         ]);
 
         $category->update($request->only(['name', 'description']));
+        Cache::forget('categories');
         return redirect('/categories')->with('success', 'Категория успешно обновлена!');
     }
 
     public function destroy(Category $category) {
         $category->delete();
+        Cache::forget('categories');
         return redirect('/categories')->with('success', 'Категория успешно удалена!');
     }
 

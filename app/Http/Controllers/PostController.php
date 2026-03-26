@@ -9,8 +9,9 @@ use App\Models\User;
 use App\Models\Tag;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\VacancyResource;
-use App\Services\PostService;
 use App\Jobs\LogPostCreated;
+use Illuminate\Support\Facades\Cache;
+use App\Events\PostCreated;
 
 class PostController extends Controller
 {
@@ -62,8 +63,8 @@ class PostController extends Controller
 
     public function create() {
         $users = User::all();
-        $categories = Category::all();
-        $tags = Tag::all();
+        $categories = Cache::remember('categories', 3600, fn() => Category::all());
+        $tags = Cache::remember('tags', 3600, fn() => Tag::all()); // Первый аргумент — уникальный строковый ключ по которому Laravel сохраняет и ищет данные в кэше. Второй — время жизни в секундах. Третий — функция которая выполнится только если данных в кэше нет
         return view('post-create', ['users' => $users, 'categories' => $categories, 'tags' => $tags]);
     }
 
@@ -78,6 +79,7 @@ class PostController extends Controller
 
         
         $post = Post::create($request->only(['title', 'content', 'user_id', 'excerpt', 'category_id']));
+        PostCreated::dispatch($post);
         $post->tags()->sync($request->input('tags', []));
         LogPostCreated::dispatch($post); // отправляет Job в очередь. То есть говорит Laravel: "возьми этот Job с этими данными и положи в таблицу jobs, worker разберётся"
         // LogPostCreated::dispatch($post)->delay(now()->addSeconds(30));
