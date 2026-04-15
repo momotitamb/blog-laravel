@@ -19,9 +19,8 @@ A blog platform with authentication, REST API, background jobs, caching and Dock
 - Admin middleware — route protection by role
 - Search and filtering by author, category, tag
 - Sorting by date, title, category name
-- REST API with API Resources (PostResource, VacancyResource)
-- HH.ru API integration — vacancy search
-- Queue system with Jobs (`LogPostCreated`, `SendVacanciesNotification`)
+- REST API with API Resources
+- Queue system with Jobs
 - Laravel Scheduler — automated job dispatch
 - Events and Listeners — Observer pattern
 - Cache with invalidation
@@ -86,9 +85,8 @@ Open: http://localhost:8080
 - Middleware для администратора — защита маршрутов по роли
 - Поиск и фильтрация по автору, категории, тегу
 - Сортировка по дате, заголовку, названию категории
-- REST API с API Resources (PostResource, VacancyResource)
-- Интеграция с HH.ru API — поиск вакансий
-- Система очередей с Jobs (`LogPostCreated`, `SendVacanciesNotification`)
+- REST API с API Resources
+- Система очередей с Jobs
 - Laravel Scheduler — автоматический запуск задач по расписанию
 - Events и Listeners — паттерн Observer
 - Кэширование с инвалидацией
